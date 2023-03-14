@@ -54,7 +54,7 @@ $$
 \textrm{Attention}(Q, K, V) = \textrm{softmax}(\frac{QK^T}{\sqrt{d_k}} )V
 $$
 
-Where \\(Q\in \mathbb{R}^{L_Q \times d}\\), \\(K\in \mathbb{R}^{L_K \times d}\\) and \\(V\in \mathbb{R}^{L_V \times d}\\). Note that in practice, the input length of queries and keys are typically equivalent in the self-attention computation, i.e. \\(L_Q = L_K = T\\) where \\(T\\) is the time series length. Therefore, the \\(QK^T\\) multiplication takes \\(O(T^2 \cdot d)\\) computational complexity. In ProbSparse attention, our goal is to create a new \\(Q_{reduce}\\) matrix and define:
+Where \\(Q\in \mathbb{R}^{L_Q \times d}\\), \\(K\in \mathbb{R}^{L_K \times d}\\) and \\(V\in \mathbb{R}^{L_V \times d}\\). Note that in practice, the input length of queries and keys are typically equivalent in the self-attention computation, i.e. \\(L_Q = L_K = T\\) where \\(T\\) is the time series length. Therefore, the \\(QK^T\\) _plication takes \\(O(T^2 \cdot d)\\) computational complexity. In ProbSparse attention, our goal is to create a new \\(Q_{reduce}\\) matrix and define:
 
 $$
 \textrm{ProbSparseAttention}(Q, K, V) = \textrm{softmax}(\frac{Q_{reduce}K^T}{\sqrt{d_k}} )V
@@ -342,7 +342,8 @@ test_grouper = MultivariateGrouper(
     num_test_dates=len(test_dataset) // num_of_variates, # number of rolling test windows
 )
 
-multi_variate_train_dataset = train_grouper(train_dataset)
+
+_train_dataset = train_grouper(train_dataset)
 multi_variate_test_dataset = test_grouper(test_dataset)
 ```
 
@@ -351,7 +352,7 @@ Note that the target is now 2-dimensional, where the first dimension is the numb
 
 ```python
 multi_variate_train_example = multi_variate_train_dataset[0]
-print('multi_variate_train_example["target"].shape =', multi_variate_train_example["target"].shape)
+print("multi_variate_train_example["target"].shape =", multi_variate_train_example["target"].shape)
 
 >>> multi_variate_train_example["target"].shape = (862, 17448)
 ```
@@ -902,7 +903,7 @@ model.eval()
 
 forecasts_ = []
 
-for batch in [next(iter(test_dataloader))]:
+for batch in test_dataloader:
     outputs = model.generate(
         static_categorical_features=batch["static_categorical_features"].to(device)
         if config.num_static_categorical_features > 0
